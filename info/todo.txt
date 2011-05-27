@@ -1,5 +1,5 @@
 postfix and prefix operator in expression !
-void not accessible in variable declaration 0
+void not accessible in variable declaration 01
 boolean expression !
 else block not required ~
 left part assignation can't be a number ~
