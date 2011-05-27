@@ -1,0 +1,19 @@
+################## 
+## NONTERMINALS ##
+##################
+Program 1
+PackageDecl 2
+ImportDecl 3
+ClassDecl 4
+FullClassName 5
+FullClassNameContinue 6
+ImportLine 7
+Modifiers 8
+Extension 9
+ClassBody 10
+AccessModifier 11
+StaticModifier 12
+FinalModifier 13
+BlockDeclaration 14
+VariableDeclaration 15
+MethodDeclaration 16

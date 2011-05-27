@@ -1,0 +1,9 @@
+postfix and prefix operator in expression !
+void not accessible in variable declaration 0
+boolean expression !
+else block not required ~
+left part assignation can't be a number ~
+plus and minus constants ~
+char parsing ~
+one term can't make expression $
+add array type !
