@@ -9,9 +9,12 @@ import mishadoff.compiler.grammar.Grammar;
 import mishadoff.compiler.grammar.InfoRule;
 import mishadoff.compiler.grammar.Rule;
 import mishadoff.compiler.grammar.Terminal;
+import mishadoff.compiler.nametables.Block;
 import mishadoff.compiler.nametables.BlockBuilder;
+import mishadoff.compiler.nametables.TableBuilder;
 import mishadoff.compiler.parser.*;
 import mishadoff.compiler.tokens.BlockCommentToken;
+import mishadoff.compiler.tokens.IdentifierToken;
 import mishadoff.compiler.tokens.LineCommentToken;
 import mishadoff.compiler.tokens.NewLineToken;
 import mishadoff.compiler.tokens.TabToken;
@@ -63,7 +66,7 @@ public class Runner {
 			
 			System.out.println("\n-----------------------------------------------");
 			// Filtering whitespace tokens
-			List<Token> tokens = new ArrayList<Token>();
+			final List<Token> tokens = new ArrayList<Token>();
 			
 			for (Token token: parser.getTokens()) {
 				if (token instanceof WhiteSpaceToken ||
@@ -116,8 +119,20 @@ public class Runner {
 				BlockBuilder builder = new BlockBuilder();
 				builder.buildBlockStructure(tokens);
 			
+				System.out.println("-----------------------------------------------");
+				System.out.println("Constructing name tables");
+				System.out.println("-----------------------------------------------");
+				System.out.println("Current block structure: \n");
 				System.out.println(builder.getCurrentBlock());
 			
+				Block topBlock = builder.getCurrentBlock();
+				
+				TableBuilder tableBuilder = new TableBuilder();
+				tableBuilder.buildNameTables(tokens, topBlock);
+				
+				System.out.println("Name Tables \n");
+				
+				System.out.println(topBlock.printRecursiveTables());
 			}
 			
 		}
