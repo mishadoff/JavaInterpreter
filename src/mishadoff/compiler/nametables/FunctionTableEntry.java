@@ -9,29 +9,15 @@ import mishadoff.compiler.tokens.Token;
  * @author mishadoff
  *
  */
-public class FunctionTableEntry {
-	Token identifier;
-	Token type;
+public class FunctionTableEntry extends TableEntry {
 	int numOfArguments;
 	List<Token> listOfTypes;
 	
-	public Token getIdentifier() {
-		return identifier;
-	}
-	public Token getType() {
-		return type;
-	}
 	public int getNumOfArguments() {
 		return numOfArguments;
 	}
 	public List<Token> getListOfTypes() {
 		return listOfTypes;
-	}
-	public void setIdentifier(Token identifier) {
-		this.identifier = identifier;
-	}
-	public void setType(Token type) {
-		this.type = type;
 	}
 	public void setNumOfArguments(int numOfArguments) {
 		this.numOfArguments = numOfArguments;

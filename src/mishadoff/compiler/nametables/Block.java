@@ -1,6 +1,8 @@
 package mishadoff.compiler.nametables;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +33,10 @@ public class Block {
 
 	public List<VariableTableEntry> getVariableTableEntries() {
 		return variableNameTable;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public Block(int id, int start, int end) {
@@ -155,6 +161,65 @@ public class Block {
 		return innerBlocks;
 	}
 	
+	/**
+	 * Method looks for identifier ONLY in this block
+	 * Returns null if identifier not found 
+	 */
+	public TableEntry findIdentifier(String id){
+		TableEntry entry = null;
+		// look for variable table
+		for (VariableTableEntry vEntry : variableNameTable) {
+			if (vEntry.identifier.getText().equals(id)){
+				return vEntry;
+			}
+		}
+		// look for variable table
+		for (FunctionTableEntry fEntry : functionNameTable) {
+			if (fEntry.identifier.getText().equals(id)){
+				return fEntry;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Method looks for identifier in all parents block
+	 * Returns num of first block contains this variable
+	 * If not found returns nulls
+	 */
+	public int findThrough(String id) {
+		TableEntry entry = findIdentifier(id);
+		if (entry == null) {
+			Block parent = getParent();
+			if (parent == null) {
+				return -1;
+			}
+			else {
+				return parent.findThrough(id);
+			}
+		}
+		else {
+			return getId();
+		}
+	}
+	
+	/**
+	 * Looks for block id in all children blocks
+	 * @param id
+	 * @return
+	 */
+	public Block getBlockById(int id){
+		Block curBlock;
+		if (this.id == id) return this;
+		else {
+			for (Block block : innerBlocks) {
+				curBlock = block.getBlockById(id);
+				if (curBlock != null) return curBlock;
+			}
+			return null;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -244,6 +309,28 @@ public class Block {
 			builder.append("\t");
 		}
 		return builder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Block))
+			return false;
+		Block other = (Block) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 	
 }

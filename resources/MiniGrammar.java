@@ -11,20 +11,26 @@ static final class Apple extends Fruit{
 	/*
 	 * Katya is a monkey
 	 */
+	public static double f1(){}
 	
 	private int f1(){
 		{
-			for (double b = 0; true; b += 1) g(a);
+			for (double b = 0; true; b += 1) goodle(b);
 			if (true) {
 				a += 5;
 			}
 			else
 			{
+				int var;
 				if (false) {
+					double var;
 					a = 7; a = 6;
 				}
 				else a = 7;
-			}	
+			}
+			
+			for (double b = 0; true; b += 1) goodle(b);
+			
 			for (int i = 0; true; i += 1){
 				for (int j = 0; true; j += 1){
 					print(i,var);
@@ -41,6 +47,7 @@ static final class Apple extends Fruit{
 		new Integer(2) + (new Integer(67) % new Double(4));
 		System.out.print(2 - 336.0 % 23.0);
 		{
+			double name;
 			70.0 * (damage(2) * damage(3, 6, petro)) % 4;
 			2 + 6 * (42 + 43 * apel(2 + (2 * iks(1.0, 0,1))));
 		}
@@ -53,7 +60,7 @@ static final class Apple extends Fruit{
 		//a++;
 	}
 	
-	final String j;
+	final String jika;
 	
 	double square(double a){
 		return a*a;

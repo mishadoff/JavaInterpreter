@@ -1,6 +1,8 @@
 package mishadoff.compiler.nametables;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
@@ -111,7 +113,20 @@ public class BlockBuilder {
 		for (Block block : forBlocks) {
 			topBlock.addBlockOuter(block);
 		}
+		resortBlocks(topBlock);
 		recalculateBlockNumbers(topBlock);
+	}
+	
+	private void resortBlocks(Block topBlock) {
+		Collections.sort(topBlock.getInnerBlocks(), new Comparator<Block>() {
+			@Override
+			public int compare(Block o1, Block o2) {
+				return o1.getStart() - o2.getStart();
+			}
+		});
+		for (Block block : topBlock.getInnerBlocks()){
+			resortBlocks(block);
+		}
 	}
 	
 	private int recalculateBlockNumbers(Block curBlock){
