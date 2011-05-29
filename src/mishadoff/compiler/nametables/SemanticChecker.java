@@ -3,14 +3,30 @@ package mishadoff.compiler.nametables;
 import java.util.ArrayList;
 import java.util.List;
 
+import mishadoff.compiler.tokens.CloseBraceToken;
+import mishadoff.compiler.tokens.IdentifierToken;
+import mishadoff.compiler.tokens.OpenBraceToken;
+import mishadoff.compiler.tokens.SeparatorToken;
+import mishadoff.compiler.tokens.Token;
+import mishadoff.compiler.tokens.TypeToken;
+import mishadoff.compiler.tokens.VoidToken;
+
 /**
  * Class provides various types of semantic checkings
  * @author mishadoff
  *
  */
 public class SemanticChecker {
-	List<SemanticConflict> errors = new ArrayList<SemanticConflict>();
 	
+	TableBuilder builder;
+	
+	List<SemanticConflict> errors = new ArrayList<SemanticConflict>();
+	List<Token> undefinedVariables = new ArrayList<Token>();
+	List<Token> undefinedFunctions = new ArrayList<Token>();
+	
+	public SemanticChecker(TableBuilder builder) {
+		this.builder = builder;
+	}
 	
 	public boolean checkDoubleThrough(Block topBlock){
 		boolean b = true;
@@ -104,6 +120,113 @@ public class SemanticChecker {
 		return this.errors;
 	}
 	
+	/**
+	 * Method checks if every identifier that uses in program
+	 * has correct visibility. Method use through lookup.
+	 * @param tokens
+	 * @param topBlock
+	 * @return
+	 */
+	public boolean checkVisibility(List<Token> tokens, Block topBlock){
+		boolean b = true;
+		final int SIZE = tokens.size();
+		final int startBlock = topBlock.getStart();
+
+		// Move to significant id
+		int currentTokenIndex = 0;
+		while (true) {
+			Token token = tokens.get(currentTokenIndex);
+			if (token.getBegin() >= startBlock)
+				break;
+			currentTokenIndex++;
+		}
+		
+		for (int j=currentTokenIndex; j < SIZE; j++){
+			Token token = tokens.get(j);
+			if (token instanceof IdentifierToken) {
+				Token nextToken = tokens.get(j+1);
+				Token prevToken = tokens.get(j-1);
+				if (nextToken instanceof OpenBraceToken) {
+					if (prevToken instanceof TypeToken ||
+						prevToken instanceof IdentifierToken ||
+						prevToken instanceof VoidToken) {
+						// function define
+					}
+					else {
+						String name = token.getText();
+						int curBlockNum = topBlock.findNumberByToken(token);
+						Block testBlock = topBlock.getBlockById(curBlockNum);
+						int blockNum = testBlock.findThrough(name);
+						if (blockNum == -1) {
+							undefinedFunctions.add(token);
+							b = false;
+						}
+					}
+				}
+				else {
+					if (prevToken instanceof IdentifierToken ||
+						prevToken instanceof TypeToken ||
+						nextToken instanceof IdentifierToken){
+						// var define
+					}
+					else {
+						if (!builder.isInFunctionDefines(token)) {
+							if (prevToken instanceof SeparatorToken &&
+								prevToken.getType() == 1) {
+								// var define
+							}
+							else {
+								String name = token.getText();
+								int curBlockNum = topBlock.findNumberByToken(token);
+								Block testBlock = topBlock.getBlockById(curBlockNum);
+								int blockNum = testBlock.findThrough(name);
+								if (blockNum == -1) {
+									undefinedVariables.add(token);
+									b = false;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		// second walk: function arguments to next block
+		for (FunctionDefine fDefine : builder.functionDefines) {
+			for (int i = fDefine.getStartIndex(); i < fDefine.getEndIndex(); i++){
+				Token curToken = tokens.get(i);
+				if (curToken instanceof IdentifierToken){
+					Token previousToken = tokens.get(i-1);
+					Token nextToken = tokens.get(i+1);
+					if (((previousToken instanceof SeparatorToken &&
+						previousToken.getType() == 1) ||
+						previousToken instanceof OpenBraceToken) &&
+						((nextToken instanceof SeparatorToken &&
+						nextToken.getType() == 1) ||
+						nextToken instanceof CloseBraceToken)) {
+						String name = curToken.getText();
+						int curBlockNum = topBlock.findNumberByToken(curToken);
+						Block testBlock = topBlock.getBlockById(curBlockNum);
+						int blockNum = testBlock.findThrough(name);
+						if (blockNum == -1) {
+							undefinedVariables.add(curToken);
+							b = false;
+						}
+					}
+				}
+			}
+		}
+		
+		return b;
+	}
+
+	public List<Token> getUndefinedVariables() {
+		return undefinedVariables;
+	}
+
+	public List<Token> getUndefinedFunctions() {
+		return undefinedFunctions;
+	}
 	
 	
 }

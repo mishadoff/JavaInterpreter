@@ -142,7 +142,7 @@ public class Runner {
 				System.out.println(topBlock.printRecursiveTables());
 				
 				
-				SemanticChecker checker = new SemanticChecker();
+				SemanticChecker checker = new SemanticChecker(tableBuilder);
 				boolean b = checker.checkDoubleThrough(topBlock);
 				if (b) {
 					System.out.println("All name tables correct");
@@ -179,12 +179,30 @@ public class Runner {
 					}
 				}
 				
+				boolean isCheckVisibility = true;
 				
+				if (isCheckVisibility){
+					b = checker.checkVisibility(tokens,topBlock);
+					if (!b) {
+						// Undefined variables
+						for (Token token : checker.getUndefinedVariables()) {
+							System.out.println("Variable " + token.getText() +
+								"[" +token.getBegin() + "," + token.getEnd() + 
+								"] undefined");
+						}
+						// Undefined functions
+						for (Token token : checker.getUndefinedFunctions()) {
+							System.out.println("Function " + token.getText() +
+								"[" +token.getBegin() + "," + token.getEnd() + 
+								"] undefined");
+						}
+					}
+				}
 				
+				// Flag switches interactive mode
+				boolean interactiveEnabled = false;
 				
-				// TODO check for visibility
-				
-				if (!b) {
+				if (interactiveEnabled) {
 					System.out.println("\n");
 					System.out.println(" === INTERACTIVE THROUGH LOOKUP === ");
 					System.out.println(" <stop> - exit interactive lookup");

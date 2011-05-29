@@ -24,8 +24,10 @@ public class BlockBuilder {
 	private List<Block> forBlocks = new ArrayList<Block>();
 	
 	private int counter = 0;
+	List<Token> tokens;
 	
 	public void buildBlockStructure(List<Token> tokens){
+		this.tokens = tokens;
 		for (Token token : tokens) {
 			if (token instanceof SeparatorToken && token.getType() == 2) {
 				openBlock(token.getBegin());
@@ -114,7 +116,42 @@ public class BlockBuilder {
 			topBlock.addBlockOuter(block);
 		}
 		resortBlocks(topBlock);
+		adjustForBlocks();
 		recalculateBlockNumbers(topBlock);
+	}
+	
+	/**
+	 * Method extends for blocks
+	 */
+	private void adjustForBlocks(){
+		for (int i=0; i < tokens.size(); i++){
+			Token token = tokens.get(i);
+			if (token instanceof ReservedWordToken &&
+				token.getType() == 7){
+				int newStart = -1;
+				while (true){
+					i++;
+					token = tokens.get(i);
+					if (token instanceof SeparatorToken &&
+						token.getType() == 0){
+						newStart = token.getEnd();
+						break;
+					}
+				}
+				int blockNum = currentBlock.findNumberByToken(token);
+				Block block = currentBlock.getBlockById(blockNum);
+				adjustNewStart(block, newStart);
+			}
+		}
+	}
+	
+	private void adjustNewStart(Block block, int newStart){
+		for (Block tempBlock : block.getInnerBlocks()) {
+			if (newStart < tempBlock.getStart()){
+				tempBlock.setStart(newStart);
+				return;
+			}
+		}
 	}
 	
 	private void resortBlocks(Block topBlock) {

@@ -7,3 +7,6 @@ plus and minus constants ~
 char parsing ~
 one term can't make expression $
 add array type !
+-----------------------------------------------
+include arguments to function name table
+check arguments in function

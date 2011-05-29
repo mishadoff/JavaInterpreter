@@ -220,6 +220,27 @@ public class Block {
 		}
 	}
 	
+	/**
+	 * Mathod looks for number of block that contains passed token.
+	 * @param token
+	 * @return
+	 */
+	public int findNumberByToken(Token token){
+		// TODO
+		int curId = -1;
+		for (Block block : innerBlocks) {
+			curId = block.findNumberByToken(token);
+			if (curId != -1) return curId;
+		}
+		if (this.start <= token.getBegin() &&
+			this.end >= token.getEnd()) {
+			return this.id;
+		}
+		else {
+			return -1;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
