@@ -2,5 +2,6 @@ package mishadoff.compiler.codegeneration;
 
 public enum PolizType {
 	FUNCTION,
-	SIMPLE
+	SIMPLE,
+	BIN_OPERATION
 }

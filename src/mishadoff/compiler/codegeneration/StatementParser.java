@@ -168,7 +168,8 @@ public class StatementParser {
 						if ((previousOp.isFunction()) ||
 							(ops.get(previousOp.getName()) == NOT_IMPORTANT_PRIORITY)  ||
 							(ops.get(previousOp.getName()) < ops.get(tokenString))) {
-							stack.push(new PolizObject(tokenString));
+							// correct binary operation
+							stack.push(new PolizObject(tokenString,PolizType.BIN_OPERATION));
 							break;
 						}
 						else {
