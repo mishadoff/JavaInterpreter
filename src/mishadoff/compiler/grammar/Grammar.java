@@ -525,6 +525,12 @@ public class Grammar {
 						stackCounter = 1;
 						st = new Statement();
 					}
+					if (i == 28 &&
+						(input.peek().getCode() != 7)) {
+						statementTrackEnabled = true;
+						stackCounter = 1;
+						st = new Statement();
+					}
 				}
 				//!
 					if (input.isEmpty()) {

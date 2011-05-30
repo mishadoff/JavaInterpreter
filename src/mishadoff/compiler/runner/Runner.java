@@ -2,11 +2,13 @@ package mishadoff.compiler.runner;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import mishadoff.compiler.codegeneration.PolizObject;
 import mishadoff.compiler.codegeneration.Statement;
 import mishadoff.compiler.codegeneration.StatementParser;
 import mishadoff.compiler.grammar.Grammar;
@@ -257,11 +259,26 @@ public class Runner {
 				
 				List<Statement> statements = g.getStatements();
 				statementParser.deleteEmptyStatements(statements);
+				
+				
+				/* Temporary method - remove all for/if/while */
+				statementParser.deleteForStatements(statements);
+				statementParser.deleteWhileStatements(statements);
+				statementParser.deleteIfStatements(statements);
+				
 				for (Statement statement : statements) {
-					System.out.println("Statement[" + statement.getTokens().size() + "]:");
+					System.out.println("\nStatement[" + statement.getTokens().size() + "]:");
 					for (Token token : statement.getTokens()) {
-						System.out.println(token.getText());
+						System.out.print(token.getText());
 					}
+				}
+				
+				
+				List<PolizObject> poliz = 
+					statementParser.transformToPoliz(statements.get(0));
+				System.out.println("\nPoliz test:");
+				for (PolizObject polizObject : poliz) {
+					System.out.print(polizObject + " ");
 				}
 			}
 			

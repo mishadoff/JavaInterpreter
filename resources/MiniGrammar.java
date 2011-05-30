@@ -13,7 +13,7 @@ static final class Apple extends Fruit{
 	 * Katya is a monkey
 	 */
 	public static double f1(int foo){
-		return foo;
+		foo = func(a, b + c, (d + call) * 7, a(a(1,2)));
 	}
 	
 	private int f1(){
