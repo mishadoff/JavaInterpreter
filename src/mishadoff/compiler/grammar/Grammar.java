@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
 
+import mishadoff.compiler.codegeneration.Statement;
+
 /**
  * Class describes language grammar
  * @author mishadoff
@@ -14,6 +16,10 @@ public class Grammar {
 	
 	private int numOfTerminals = 100;
 	private int numOfNonterminals = 100;
+	
+	List<Statement> statements = new ArrayList<Statement>();
+	
+	Statement st = new Statement();
 	
 	/**
 	 * Table describes LL(1) parsing rules
@@ -453,6 +459,11 @@ public class Grammar {
 	public List<Rule> parse(Stack<Terminal> input){
 		List<Rule> usingRules = new ArrayList<Rule>();
 		Stack<Symbol> stack = new Stack<Symbol>();
+		boolean statementTrackEnabled = false;
+		
+		//! MODIFIED CODE
+		int stackCounter = -1;
+		//!
 		
 		if (input.isEmpty()) {
 			System.out.println("Input is empty");
@@ -483,10 +494,39 @@ public class Grammar {
 			}
 			Symbol stackTop = stack.peek();
 			 
+			//! MODIFIED CODE
+			// 28 - statement
+			if (stackCounter == 0) {
+				statements.add(st);
+				st = new Statement();
+				statementTrackEnabled = false;
+			}
+			//!
+			
 			
 			// If on top of stack is nonterminal
 			if (stackTop instanceof NonTerminal) {
 				int i = stackTop.getCode();
+				
+				//! MODIFIED CODE
+				if (!statementTrackEnabled) {
+					if (i == 39) {
+						statementTrackEnabled = true;
+						stackCounter = 1;
+						st = new Statement();
+					}
+					if (i == 40) {
+						statementTrackEnabled = true;
+						stackCounter = 1;
+						st = new Statement();
+					}
+					if (i == 41) {
+						statementTrackEnabled = true;
+						stackCounter = 1;
+						st = new Statement();
+					}
+				}
+				//!
 					if (input.isEmpty()) {
 						//System.out.println("Parsing error at " + (parseTokenCount+1) + " token");
 						usingRules.add(new InfoRule("bad", parseTokenCount+1));
@@ -496,12 +536,15 @@ public class Grammar {
 				if (table[i][j] != 0){
 					int rule = table[i][j];
 					Rule r = rules.get(rule - 1);
+					
 					// Change magazine
 						stack.pop(); // Delete left part of rule
+						if (statementTrackEnabled) stackCounter--;
 						
 					// Add all right part of rule in inverse order
 					for (int k = r.getRightSide().length - 1; k >= 0; k--) {
 						stack.push(r.getRightSide()[k]);
+						if (statementTrackEnabled) stackCounter++;
 					}
 					// Increment parse token count
 					parseTokenCount++;
@@ -517,7 +560,9 @@ public class Grammar {
 			else if (stackTop instanceof Terminal){
 				if (stackTop.getCode() == input.peek().getCode()) {
 					stack.pop();
-					input.pop();
+					Terminal t = input.pop();
+					st.add(t.token);
+					stackCounter--;
 				}
 				else {
 					//System.out.println("Parsing error at " + (parseTokenCount+1) + " token");
@@ -526,6 +571,10 @@ public class Grammar {
 				}
 			}
 		}
+	}
+
+	public List<Statement> getStatements() {
+		return statements;
 	}
 	
 }

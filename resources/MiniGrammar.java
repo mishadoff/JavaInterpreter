@@ -32,6 +32,10 @@ static final class Apple extends Fruit{
 				else a = 7;
 			}
 			
+			while (true) {
+				int c = c + c;
+			}
+			
 			for (double b = 0; true; b += 1) printName(b);
 			
 			for (int i = 0; true; i += 1){
@@ -49,6 +53,8 @@ static final class Apple extends Fruit{
 		a += (b *= c % 3);
 		{
 			double name;
+			double one, two;
+			call(one, two, three);
 			70.0 * (damage(2) * damage(3, 6, a)) % 4;
 			2 + 6 * (42 + 43 * apel(2 + (2 * iks(1.0, 0,1))));
 		}

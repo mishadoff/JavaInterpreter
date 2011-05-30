@@ -3,8 +3,6 @@ package mishadoff.compiler.nametables;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.org.apache.xerces.internal.impl.dtd.models.DFAContentModel;
-
 import mishadoff.compiler.tokens.CloseBraceToken;
 import mishadoff.compiler.tokens.IdentifierToken;
 import mishadoff.compiler.tokens.OpenBraceToken;
@@ -78,7 +76,7 @@ public class TableBuilder {
 							if (tokens.get(j-2) instanceof OpenBraceToken &&
 								tokens.get(j-3) instanceof ReservedWordToken &&
 								tokens.get(j-3).getType() == 7) {
-								System.out.println("*");
+								// nothing to do
 							}
 							else {
 								VariableTableEntry entry = new VariableTableEntry();

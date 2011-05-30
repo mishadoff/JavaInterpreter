@@ -7,6 +7,8 @@ import java.util.Scanner;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import mishadoff.compiler.codegeneration.Statement;
+import mishadoff.compiler.codegeneration.StatementParser;
 import mishadoff.compiler.grammar.Grammar;
 import mishadoff.compiler.grammar.InfoRule;
 import mishadoff.compiler.grammar.Rule;
@@ -248,6 +250,19 @@ public class Runner {
 					}
 				}
 				
+				
+				// call
+				
+				StatementParser statementParser = new StatementParser();
+				
+				List<Statement> statements = g.getStatements();
+				statementParser.deleteEmptyStatements(statements);
+				for (Statement statement : statements) {
+					System.out.println("Statement[" + statement.getTokens().size() + "]:");
+					for (Token token : statement.getTokens()) {
+						System.out.println(token.getText());
+					}
+				}
 			}
 			
 		}
