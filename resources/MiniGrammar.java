@@ -4,16 +4,18 @@ import id.id;
 import id2.id3.id4;
 
 static final class Apple extends Fruit{
-	int a = 2,b=6-a;
+	int a,b;
 	private int b;
 	char c;
-	static String a1=a, a2=376 * 512 - a[8].point;
+	static String a1, a2;
 	
 	/*
 	 * Katya is a monkey
 	 */
 	public static double f1(int foo){
-		foo = func(a, b + c, (d + call) * 7, a(a(1,2)));
+		//a = b + c * d / (a + 3);
+		//foo = func(a, b + c, (d + call) * 7, a(a(1,2)));
+		call(a+b, c-d);
 	}
 	
 	private int f1(){

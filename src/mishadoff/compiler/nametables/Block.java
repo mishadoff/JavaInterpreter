@@ -23,6 +23,9 @@ public class Block {
 	
 	private int currentLevel = 0;
 	
+	private Block parent = null;
+	private List<Block> innerBlocks = new ArrayList<Block>();
+	
 	/* Name tables */
 	private List<FunctionTableEntry> functionNameTable = new LinkedList<FunctionTableEntry>();
 	private List<VariableTableEntry> variableNameTable = new LinkedList<VariableTableEntry>();
@@ -44,9 +47,7 @@ public class Block {
 		this.start = start;
 		this.end = end;
 	}
-	
-	private Block parent = null;
-	private List<Block> innerBlocks = new ArrayList<Block>();
+
 	
 	public void addBlock(Block block){
 		innerBlocks.add(block);

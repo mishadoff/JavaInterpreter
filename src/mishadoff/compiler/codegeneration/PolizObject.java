@@ -44,13 +44,25 @@ public class PolizObject {
 		return (type == PolizType.FUNCTION);
 	}
 	
+	public boolean isBinaryOperator(){
+		return (type == PolizType.BIN_OPERATION);
+	}
+	
+	public boolean isUnaryOperator(){
+		return (type == PolizType.UNARY_OPERATION);
+	}
+	
+	public boolean isActive(){
+		return isFunction() || isBinaryOperator() || isUnaryOperator();
+	}
+	
 	@Override
 	public String toString() {
-		if (type == PolizType.SIMPLE) {
-			return getName();
+		if (type == PolizType.FUNCTION) {
+			return getName() + "[" + args + "]";
 		}
 		else {
-			return getName() + "[" + args + "]";
+			return getName();
 		}
 	}
 	

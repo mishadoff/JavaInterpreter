@@ -11,6 +11,7 @@ import java.util.StringTokenizer;
 import mishadoff.compiler.codegeneration.PolizObject;
 import mishadoff.compiler.codegeneration.Statement;
 import mishadoff.compiler.codegeneration.StatementParser;
+import mishadoff.compiler.codegeneration.Triad;
 import mishadoff.compiler.grammar.Grammar;
 import mishadoff.compiler.grammar.InfoRule;
 import mishadoff.compiler.grammar.Rule;
@@ -276,9 +277,19 @@ public class Runner {
 				
 				List<PolizObject> poliz = 
 					statementParser.transformToPoliz(statements.get(0));
-				System.out.println("\nPoliz test:");
+				System.out.println("\n *** Poliz:");
 				for (PolizObject polizObject : poliz) {
 					System.out.print(polizObject + " ");
+				}
+				
+				System.out.println("\n *** Triads");
+				List<Triad> triads = 
+					statementParser.transformPolizToTriads(poliz);
+				for (Triad triad : triads) {
+					System.out.println(triad.getNum() + ":  " +
+							triad.getOperator() + "  " +
+							triad.getOperand1() + "  " +
+							triad.getOperand2());
 				}
 			}
 			

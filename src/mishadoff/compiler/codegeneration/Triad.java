@@ -6,12 +6,14 @@ package mishadoff.compiler.codegeneration;
  *
  */
 public class Triad {
+	int num;
 	String operator;
 	
 	String operand1;
 	String operand2;
 	
-	public Triad(String operator, String operand1, String operand2) {
+	public Triad(int num, String operator, String operand1, String operand2) {
+		this.num = num;
 		this.operator = operator;
 		this.operand1 = operand1;
 		this.operand2 = operand2;
@@ -34,6 +36,10 @@ public class Triad {
 	}
 	public void setOperand2(String operand2) {
 		this.operand2 = operand2;
+	}
+
+	public int getNum() {
+		return num;
 	}
 	
 }

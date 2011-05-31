@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import com.sun.xml.internal.bind.v2.runtime.Name;
 
 import mishadoff.compiler.tokens.NewLineToken;
@@ -23,6 +25,8 @@ public class StatementParser {
 	static HashMap<String, Integer> ops = new HashMap<String, Integer>();
 	static int NOT_IMPORTANT_PRIORITY = 33;
 	
+	int numberOfTriads = 0;
+	
 	{
 		// Assign operators
 		ops.put("=", 0);
@@ -38,6 +42,12 @@ public class StatementParser {
 		ops.put("*", 20);
 		ops.put("/", 20);
 		ops.put("%", 20);
+		
+		ops.put("<", 5);
+		ops.put(">", 5);
+		ops.put("<=", 5);
+		ops.put(">=", 5);
+		ops.put("!=", 5);
 		
 		ops.put(".", 100);
 		
@@ -178,14 +188,14 @@ public class StatementParser {
 					}
 				}
 				else {
-					stack.push(new PolizObject(tokenString));
+					stack.push(new PolizObject(tokenString, PolizType.BIN_OPERATION));
 				}
 			}
 			else {
 				// Check if function
 				if (functionBegin) functionBegin = false;
 				Token next;
-				if (i != inputTokens.size() - 2) {
+				if (i <= inputTokens.size() - 2) {
 					next = inputTokens.get(i+1);
 					if (next.getText().equals("(")) {
 						stack.push(new PolizObject("("));
@@ -210,5 +220,78 @@ public class StatementParser {
 		return output;
 	}
 	
+	/**
+	 * Converts poliz to triads
+	 */
+	public List<Triad> transformPolizToTriads(List<PolizObject> poliz){
+		List<Triad> triads = new ArrayList<Triad>();
+		int currentPolizSize = poliz.size();
+		for (int i=0; i < currentPolizSize; i++){
+			PolizObject pObject = poliz.get(i);
+			if (pObject.isActive()) {
+				if (pObject.isUnaryOperator()) {
+					throw new NotImplementedException();
+				}
+				else if (pObject.isBinaryOperator()){
+					PolizObject operand1 = poliz.get(i-2);
+					PolizObject operand2 = poliz.get(i-1);
+					Triad triad = new Triad(
+							numberOfTriads,
+							pObject.getName(),
+							operand1.getName(),
+							operand2.getName()
+						);
+					triads.add(triad);
+					// delete all
+					poliz.remove(i-2);
+					poliz.remove(i-2);
+					
+					currentPolizSize -= 2;
+					
+					//poliz.remove(i-2);
+					// poliz.ge
+					poliz.set(i-2, new PolizObject("@[" + numberOfTriads + "]",
+							PolizType.LINK_TO_TRIAD));
+					numberOfTriads++;
+				}
+				else if (pObject.isFunction()){
+					int num = pObject.getArgs();
+					PolizObject arg;
+					for (int k = num; k > 0; k--){
+						arg = poliz.get(i-k);
+						Triad triad = new Triad(
+								numberOfTriads,
+								"PUSH",
+								arg.getName(),
+								""
+							);
+						triads.add(triad);
+						numberOfTriads++;
+					}
+					Triad triad = new Triad(
+							numberOfTriads,
+							"CALL",
+							pObject.getName(),
+							""
+						);
+					triads.add(triad);
+					
+					for (int k = num; k > 0; k--){
+						poliz.remove(i-num);
+					}
+					
+					currentPolizSize -= num;
+					
+					poliz.set(i-num, new PolizObject("@[" + numberOfTriads + "]",
+							PolizType.LINK_TO_TRIAD));
+					
+					numberOfTriads++;
+					// TODO implement function behaviour
+				}
+				i = 0;
+			}
+		}
+		return triads;
+	}
 	
 }
